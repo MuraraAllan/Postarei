@@ -1,0 +1,13 @@
+version: "3"
+services:
+    gateway:
+        build: .
+        depends_on:
+            - mongo
+        links:
+            - mongo
+        environment:
+            MONGO_URL: mongodb://mongo/DemoApp
+        entrypoint: "node server"
+    mongo:
+        image: mongo
