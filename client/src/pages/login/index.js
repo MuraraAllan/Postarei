@@ -3,7 +3,7 @@ import LoginComponent from './components/Login';
 
 export default class LoginContainer extends Component {
   componentDidMount() {
-    console.log('give me props ', this.props);
+    console.log('give me props_logincontainer', this.props);
   }
 
   render() {
