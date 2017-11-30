@@ -8,7 +8,7 @@ export default class LoginContainer extends Component {
 
   render() {
     return (
-      <div class='LoginContainer'>
+      <div className='LoginContainer'>
         <LoginComponent />
       </div>
     )
