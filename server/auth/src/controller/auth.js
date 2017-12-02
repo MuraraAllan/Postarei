@@ -64,12 +64,21 @@ const restrictedRoutes = (req,res, next) => {
   next();
 };
 
-module.exports = (server) => {
+
+const FacebookOAuth = (req,res,next) => {
+//  this.passport.authenticate('facebook');
+  console.log('ae coroi', res);
+  next();
+  return;
+}
+
+module.exports = (server, passport) => {
   server.post('/user/signup', userRoutes.signUp);
   server.post('/auth/signout', signOut);
   server.post('/auth(/jwt|/session)$/', signIn);
   //  server.post('/auth/linkedin/*', LinkedInAuth);
-  //  server.get('/auth/linkedin/*', LinkedInAuth);
+  server.get('/oauth/facebook',passport.authenticate('facebook', { failureRedirect: '/' }));
+  server.get('/oauth/facebook/callback', FacebookOAuth);
   server.use(restrictedRoutes);
   userRoutes(server);
 };
