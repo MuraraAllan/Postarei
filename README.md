@@ -1,4 +1,4 @@
 # Postarei
 Facebook posting tool 
 
-#help please =)
+# welcome =)
