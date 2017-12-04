@@ -13,6 +13,9 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  fbID : String,
+  fbAccessToken: String,
+  fbProfilePicture: String,
   email: {
     type: String,
     unique: true,
