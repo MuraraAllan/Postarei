@@ -1,6 +1,5 @@
 const User = require('../model/mongoose/user');
-const { getUserToken, verifyToken } = require('../utils');
-const { sendUserError, sendStatusOk, checkUserData } = require('./routeConstants');
+const { sendUserError, sendStatusOk, checkUserData } = require('./routeUtils');
 const FB = require('fb');
 const { facebookID, facebookRedirectUri, facebookSecret } = require('../secret.js');
 FB.options({version: 'v2.11'});
