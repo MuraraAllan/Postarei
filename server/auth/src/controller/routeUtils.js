@@ -1,3 +1,8 @@
+const jwt = require('jsonwebtoken');
+const { appSecret } = require('../secret.js');
+
+const findUserID = req => req.session.userID ? req.session.userID : req.userID;
+
 const STATUS_USER_ERROR = 422;
 const STATUS_NOT_FOUND = 400;
 const STATUS_OK = 200;
@@ -14,6 +19,7 @@ const sendUserError = (res, msg = 'something goes wrong, please contact support@
   res.json({error: msg});
   return;
 };
+
 const sendStatusOk = (res ,msg = {ok: true}) => {
   res.status(STATUS_OK);
   res.json(msg);
@@ -27,6 +33,5 @@ module.exports = {
   sendUserError,
   sendStatusOk,
   checkUserData,
+  findUserID,
 };
-
-
