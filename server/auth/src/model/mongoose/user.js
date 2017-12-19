@@ -9,10 +9,6 @@ mongoose.mpromise = global.Promise;
 const userSchema = new Schema({
   city: String,
   age: Number, 
-  password : {
-    type: String,
-    required: true,
-  },
   fbID : String,
   fbAccessToken: String,
   fbProfilePicture: String,
@@ -28,31 +24,8 @@ const userSchema = new Schema({
     }
   },
 });
-userSchema.methods.comparePassword = function (pass) {
-  return new Promise((resolve) => {   
-    resolve(bcrypt.compare(pass, this.password));
-  }).then((res) => res);
-};
-
-userSchema.query.byEmail = function(email) {
-  return this.find({ email: email });
-};
-
-//pre save hook to convert password into hashed password
-userSchema.pre('save', function (next) {
-  if (this.password && this.isNew) {
-    bcrypt.genSalt(SALT_COST, (err, salt) => {
-      if (err) return next(err);
-      bcrypt.hash(this.password, salt, (err, newPass) => {
-        if (err) return next(err);
-        this.password = newPass;
-        next();
-      });
-    });
-  }
-});
 
 
-const User = model.call(mongoose,'User',  userSchema);
+const User = model.call(mongoose, 'User',  userSchema);
 
 module.exports = User;

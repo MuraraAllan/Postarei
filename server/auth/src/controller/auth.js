@@ -13,11 +13,10 @@ const signOut = (req,res) => {
     sendStatusOk(res, { loggedOut: true });
     return;
   });
-  }
+}
 
 const restrictedRoutes = (req,res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
-  console.log(fbAccessToken);
   if (fbAccessToken) {
     FB.api('me', { fields: 'id,name,email', scope:'email', access_token: fbAccessToken }).then(fbUser => {
       const email = fbUser.id.concat('@facebook.com');
@@ -26,33 +25,18 @@ const restrictedRoutes = (req,res, next) => {
           const user = new User({ name: fbUser.name, fbID: fbUser.id, fbAccessToken, email, password: 1234 });
           user.save((err, user) => {
             if (err) return sendUserError(res, err);
-            sendStatusOk(res, 'aaa'+user);
-            return;
+            sendStatusOk(res,  user);
+            netx();
           });
-        return;
         }
         sendStatusOk(res, user);
+        next();
       })
-    })
-    return;
-   }
-
-  const token = req.headers['authorization'];
-  if (token) {
-    const decoded = verifyToken(req.headers['authorization']);
-    if (decoded === undefined) {
-      sendUserError(res, 'Your token is invalid, please login again');
-      return;
-    }
-    req.userID = decoded.data.id;
-    next();
-    return;
-  }
-  if (!req.session.userID) {
+    });
+  } else {
     sendUserError(res, 'You need to Authenticate in order to access the API, please make a POST request to /auth/session with a valid username and password.');
     return;
   }
-  next();
 };
 
 
