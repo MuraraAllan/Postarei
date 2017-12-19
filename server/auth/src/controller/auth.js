@@ -1,41 +1,9 @@
 const User = require('../model/mongoose/user');
 const { getUserToken, verifyToken } = require('../utils');
 const { sendUserError, sendStatusOk, checkUserData } = require('./routeConstants');
-const userRoutes = require('./user');
 const FB = require('fb');
 const { facebookID, facebookRedirectUri, facebookSecret } = require('../secret.js');
 FB.options({version: 'v2.11'});
-
-const signIn = (req,res) => {
-  if (!checkUserData(req)) {
-    sendUserError(res, 'Invalid data');
-    return;
-  }
-  const reqUsername = req.body.username;
-  const reqPassword = req.body.password;
-  // generate a JWT token if the username/password is valid
-  // JWT will contain : userID, accessLevel for graphql API resolvers 
-  User.findOne({ email : reqUsername }, (err,user) => {
-    if (!user) {
-      sendUserError(res, 'Invalid Password/Username combination :(');
-      return;
-    }
-    user.comparePassword(reqPassword).then((valid) => {
-      if (valid != true) {
-        sendUserError(res,'Invalid Password/Username combination :(');
-        return;
-      }
-      // distinguish between jwt accesspoint or session
-      if (req.path === '/auth/jwt') {
-        const token = getUserToken(user); 
-        sendStatusOk(res, {token});
-        return;
-      }
-      req.session.userID = user.id;
-      sendStatusOk(res, {logged: true}); 
-    });
-  });
-};
 
 const signOut = (req,res) => {
   req.session.destroy((err) => {
@@ -46,7 +14,7 @@ const signOut = (req,res) => {
     sendStatusOk(res, { loggedOut: true });
     return;
   });
-}
+  }
 
 const restrictedRoutes = (req,res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
@@ -117,12 +85,7 @@ const FacebookOAuthCallback = (req,res, next) => {
   });
 }
 module.exports = (server) => {
-  server.post('/user/signup', userRoutes.signUp);
-  server.post('/auth/signout', signOut);
-  server.post('/auth(/jwt|/session)$/', signIn);
-  //  server.post('/auth/linkedin/*', LinkedInAuth);
   server.get('/oauth/facebook', FacebookOAuth);
   server.get('/oauth/facebook/callback', FacebookOAuthCallback);
   server.use(restrictedRoutes);
-  userRoutes(server);
 };
