@@ -3,6 +3,7 @@ const { sendUserError, sendStatusOk, checkUserData } = require('./routeUtils');
 const FB = require('fb');
 const { facebookID, facebookRedirectUri, facebookSecret } = require('../secret.js');
 FB.options({version: 'v2.11'});
+FB.options('display', 'popup');
 
 const signOut = (req,res) => {
   req.session.destroy((err) => {
@@ -61,8 +62,8 @@ const restrictedRoutes = (req,res, next) => {
 const FacebookOAuth = (req,res,next) => {
 //  this.passport.authenticate('facebook');
   const authUrl = FB.getLoginUrl({
-    scope: 'email, user_likes, user_photos, user_videos, public_profile, user_friends',
     display: 'popup',
+    scope: 'email, user_likes, user_photos, user_videos, public_profile, user_friends',
     redirect_uri: facebookRedirectUri,
     appId: facebookID
   });
