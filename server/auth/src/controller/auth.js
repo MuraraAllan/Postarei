@@ -15,7 +15,6 @@ const signOut = (req,res) => {
     return;
   });
 }
-
 const addReference = (newUser, refererID) => {
   User.findById(refererID, (err, referer) => {
     const exists = referer.referedUsers.find(referedUser => String(referedUser) === String(newUser));
@@ -25,22 +24,30 @@ const addReference = (newUser, refererID) => {
   });
 }
 
+const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar });
 
 const restrictedRoutes = (req,res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
   const refererID = req.session.refererID;
   if (fbAccessToken) {
-    FB.api('me', { fields: 'id,name,email', scope:'email', access_token: fbAccessToken }).then(fbUser => {
+    FB.api('me', { fields: 'id,name,email,picture', scope: 'email', access_token: fbAccessToken }).then(fbUser => {
       const email = fbUser.id.concat('@facebook.com');
       User.findOne({ email }, (err,user) => {
         if (!user) {
-          const user = new User({ name: fbUser.name, fbID: fbUser.id, fbAccessToken, email, password: 1234 });
+          const fbUserPicture = fbUser.picture.data.url;
+          const user = new User({ name: fbUser.name, 
+                                  fbID: fbUser.id, 
+                                  fbAccessToken, 
+                                  email, 
+                                  avatar: fbUserPicture, 
+                                  fbProfilePicture: fbUserPicture 
+                               });
           user.save((err, user) => {
             if (err) return sendUserError(res, err);
             if (refererID) {  
               addReference(user._id, refererID); 
             }
-            sendStatusOk(res, user);
+            sendStatusOk(res, formatUser(user));
             next();
           });
           return;
@@ -48,7 +55,7 @@ const restrictedRoutes = (req,res, next) => {
         if (refererID) {
           addReference(user._id, refererID); 
         }
-        sendStatusOk(res, user);
+        sendStatusOk(res, formatUser(user));
         next();
       })
     });
