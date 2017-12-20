@@ -15,8 +15,19 @@ const signOut = (req,res) => {
   });
 }
 
+const addReference = (newUser, refererID) => {
+  User.findById(refererID, (err, referer) => {
+    const exists = referer.referedUsers.find(referedUser => String(referedUser) === String(newUser));
+    if (exists) return true;
+    referer.referedUsers = [ ...referer.referedUsers, newUser ];
+    referer.save();
+  });
+}
+
+
 const restrictedRoutes = (req,res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
+  const refererID = req.session.refererID;
   if (fbAccessToken) {
     FB.api('me', { fields: 'id,name,email', scope:'email', access_token: fbAccessToken }).then(fbUser => {
       const email = fbUser.id.concat('@facebook.com');
@@ -25,9 +36,16 @@ const restrictedRoutes = (req,res, next) => {
           const user = new User({ name: fbUser.name, fbID: fbUser.id, fbAccessToken, email, password: 1234 });
           user.save((err, user) => {
             if (err) return sendUserError(res, err);
-            sendStatusOk(res,  user);
-            netx();
+            if (refererID) {  
+              addReference(user._id, refererID); 
+            }
+            sendStatusOk(res, user);
+            next();
           });
+          return;
+        }
+        if (refererID) {
+          addReference(user._id, refererID); 
         }
         sendStatusOk(res, user);
         next();
@@ -44,6 +62,7 @@ const FacebookOAuth = (req,res,next) => {
 //  this.passport.authenticate('facebook');
   const authUrl = FB.getLoginUrl({
     scope: 'email, user_likes, user_photos, user_videos, public_profile, user_friends',
+    display: 'popup',
     redirect_uri: facebookRedirectUri,
     appId: facebookID
   });
@@ -51,7 +70,7 @@ const FacebookOAuth = (req,res,next) => {
   return;
 }
 
-const FacebookOAuthCallback = (req,res, next) => {
+const FacebookOAuthCallback = (req, res, next) => {
   FB.api('oauth/access_token', {
       client_id: facebookID,
       scope: 'email, user_likes, user_photos, user_videos, public_profile, user_friends',
@@ -67,8 +86,24 @@ const FacebookOAuthCallback = (req,res, next) => {
     return;
   });
 }
+
+const recruitNewUser = (req, res, next) => {
+  const recruiterID = req.params.recruiterID;
+  User.findById(recruiterID, (err, user) => {
+    if (user) {
+      req.session.refererID = req.params.recruiterID;
+//      next(FacebookOAuth(req, res, next));
+      res.redirect('/oauth/facebook');
+      return;
+    }
+    sendUserError(res, 'Invalid reference user');
+    return;
+  });
+} 
+
 module.exports = (server) => {
   server.get('/oauth/facebook', FacebookOAuth);
+  server.get('/join/:recruiterID', recruitNewUser);
   server.get('/oauth/facebook/callback', FacebookOAuthCallback);
   server.use(restrictedRoutes);
 };

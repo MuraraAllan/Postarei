@@ -12,6 +12,7 @@ const userSchema = new Schema({
   fbID : String,
   fbAccessToken: String,
   fbProfilePicture: String,
+  referedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }], 
   email: {
     type: String,
     unique: true,
