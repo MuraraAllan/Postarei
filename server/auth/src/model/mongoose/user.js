@@ -9,6 +9,8 @@ mongoose.mpromise = global.Promise;
 const userSchema = new Schema({
   city: String,
   age: Number, 
+  name: String,
+  avatar: String,
   fbID : String,
   fbAccessToken: String,
   fbProfilePicture: String,
