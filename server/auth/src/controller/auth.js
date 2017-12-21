@@ -11,10 +11,13 @@ const signOut = (req,res) => {
       sendUserError(res, 'You are not logged in');
       return;
     }
+    req.session.authenticated = false;
+    req.session.destroy();
     sendStatusOk(res, { loggedOut: true });
     return;
   });
 }
+
 const addReference = (newUser, refererID) => {
   User.findById(refererID, (err, referer) => {
     const exists = referer.referedUsers.find(referedUser => String(referedUser) === String(newUser));
@@ -24,6 +27,7 @@ const addReference = (newUser, refererID) => {
   });
 }
 
+// NEED REFACTOR 
 const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar });
 
 const restrictedRoutes = (req,res, next) => {
@@ -47,7 +51,9 @@ const restrictedRoutes = (req,res, next) => {
             if (refererID) {  
               addReference(user._id, refererID); 
             }
-            sendStatusOk(res, formatUser(user));
+            const returnUser = formatUser(user);
+            req.session.user = returnUser;
+            req.session.user.authenticated = true;
             next();
           });
           return;
@@ -55,7 +61,9 @@ const restrictedRoutes = (req,res, next) => {
         if (refererID) {
           addReference(user._id, refererID); 
         }
-        sendStatusOk(res, formatUser(user));
+        const returnUser = formatUser(user);
+        req.session.user = returnUser;
+        req.session.user.authenticated = true;
         next();
       })
     });
@@ -66,8 +74,9 @@ const restrictedRoutes = (req,res, next) => {
 };
 
 
-const FacebookOAuth = (req,res,next) => {
+const FacebookOAuth = (req, res, next) => {
 //  this.passport.authenticate('facebook');
+  req.session.redirect = true;
   const authUrl = FB.getLoginUrl({
     display: 'popup',
     scope: 'email, user_likes, user_photos, user_videos, public_profile, user_friends',
@@ -78,7 +87,20 @@ const FacebookOAuth = (req,res,next) => {
   return;
 }
 
+const currentUser = (req, res, next) => {
+   if (req.session.redirect) {
+    res.status(200);
+    delete   req.session.redirect;
+    res.redirect('http://localhost:3000/posting');
+    return;
+  }
+    
+  sendStatusOk(res, req.session.user);
+  return;
+}
+
 const FacebookOAuthCallback = (req, res, next) => {
+  req.session.redirect = true;
   FB.api('oauth/access_token', {
       client_id: facebookID,
       scope: 'email, user_likes, user_photos, user_videos, public_profile, user_friends',
@@ -114,4 +136,6 @@ module.exports = (server) => {
   server.get('/join/:recruiterID', recruitNewUser);
   server.get('/oauth/facebook/callback', FacebookOAuthCallback);
   server.use(restrictedRoutes);
+  server.get('/user', currentUser);
+  server.use(currentUser);
 };
