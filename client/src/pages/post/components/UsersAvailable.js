@@ -21,12 +21,14 @@ const UsersAvailable = (props) => {
   return (
       <EmptyWrapper >
         <UserWrapper className='UsersAvailableComponent'>
-          {props.users.map(item => {
-            return <Image style={{margin: '5px'}} key={item.uuid} src={item.avatar_url} />
-          })}
+          <h1> hello moto </h1>
         </UserWrapper>
       </EmptyWrapper>
   )
 }
 
 export default UsersAvailable;
+//
+// {props.users.map(item => {
+//   return <Image style={{margin: '5px'}} key={item.uuid} src={item.avatar_url} />
+// })}
