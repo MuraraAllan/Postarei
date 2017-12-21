@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.17.1",
     "bootstrap": "^4.0.0-beta.2",
     "react": "^16.2.0",
     "react-bootstrap": "^0.31.5",
@@ -15,6 +16,7 @@
     "redux": "^3.7.2",
     "redux-auth": "0.0.5-beta5",
     "redux-promise": "^0.5.3",
+    "redux-thunk": "^2.2.0",
     "styled-components": "^2.2.4"
   },
   "scripts": {

@@ -1,21 +1,19 @@
 import React,  { Component } from 'react';
 import UsersAvailable from './components/UsersAvailable';
 import { connect } from 'react-redux';
-import { getUsers } from '../../redux/actions/';
+import { getUser } from '../../redux/actions/';
 
 
 class PostContainer extends Component {
   componentWillMount() {
-    this.props.getUsers();
-    console.log('give me props PostContainer', this.props)
+    this.props.getUser();
   }
-
   render() {
+    console.log('hello motoooo', this.props.user)
     const UsersAvailableWrapped = UsersAvailable;
-    console.log()
     return (
       <div className='PostContainer'>
-        <UsersAvailableWrapped  users={this.props.users}/>
+        <UsersAvailableWrapped  users={this.props.user}/>
       </div>
     )
   }
@@ -24,8 +22,8 @@ class PostContainer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    users: state.users,
+    user: state.user,
   }
 }
 
-export default connect(mapStateToProps, { getUsers })(PostContainer);
+export default connect(mapStateToProps, { getUser })(PostContainer);
