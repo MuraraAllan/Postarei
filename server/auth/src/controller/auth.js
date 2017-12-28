@@ -1,9 +1,8 @@
 const User = require('../model/mongoose/user');
 const { sendUserError, sendStatusOk, checkUserData } = require('./routeUtils');
 const FB = require('fb');
-const { facebookID, facebookRedirectUri, facebookSecret } = require('../secret.js');
 FB.options({version: 'v2.11'});
-FB.options('display', 'popup');
+const { facebookID, facebookRedirectUri, facebookSecret } = require('../secret.js');
 
 const signOut = (req,res) => {
   req.session.destroy((err) => {
@@ -27,8 +26,10 @@ const addReference = (newUser, refererID) => {
   });
 }
 
-// NEED REFACTOR 
-const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar });
+const formatUser = user => {
+ console.log('HERE COMES THE USERRRRRRRRRR :HELLO MOTO USER TROLL ', user);
+ return Object.assign({}, { name: user.name }, { avatar: user.avatar }, { refered: user.referedUsers });
+}
 
 const restrictedRoutes = (req,res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
@@ -90,11 +91,10 @@ const FacebookOAuth = (req, res, next) => {
 const currentUser = (req, res, next) => {
    if (req.session.redirect) {
     res.status(200);
-    delete   req.session.redirect;
+    delete req.session.redirect;
     res.redirect('http://localhost:3000/posting');
     return;
   }
-    
   sendStatusOk(res, req.session.user);
   return;
 }
@@ -122,7 +122,6 @@ const recruitNewUser = (req, res, next) => {
   User.findById(recruiterID, (err, user) => {
     if (user) {
       req.session.refererID = req.params.recruiterID;
-//      next(FacebookOAuth(req, res, next));
       res.redirect('/oauth/facebook');
       return;
     }
