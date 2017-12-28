@@ -27,7 +27,7 @@
     "eslint": "^4.8.0"
   },
   "scripts": {
-    "test": "mocha -b tests/auth/* ",
+    "test": "mocha -b tests/* ",
     "start": "nodemon src/server.js",
     "lint": "node node_modules/.bin/eslint *.js src/* ",
     "lintfix": "node node_modules/.bin/eslint --fix *.js src/*"

@@ -19,7 +19,7 @@ const sendUserError = (res, msg = 'something goes wrong, please contact support@
   res.json({error: msg});
 };
 
-const sendStatusOk = (res ,msg = {ok: true}) => {
+const sendStatusOk = (res, msg = {ok: true}) => {
   res.status(STATUS_OK);
   res.json(msg);
 };
