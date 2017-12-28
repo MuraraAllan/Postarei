@@ -26,8 +26,7 @@ const addReference = (newUser, refererID) => {
   });
 }
 
-const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar }, { refered: user.referedUsers });
-
+const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar });
 
 const persistenceLayer = (req, res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
@@ -35,7 +34,9 @@ const persistenceLayer = (req, res, next) => {
   if (fbAccessToken) {
     fbUtils.getCurrentUser(fbAccessToken).then(fbUser => {
       const email = fbUser.id.concat('@facebook.com');
-      User.findOne({ email }, (err,user) => {
+      User.findOne({ email })
+       .populate('referedUsers').
+        exec((err,user) => {
         if (!user) {
           const fbUserPicture = fbUser.picture.data.url;
           const user = new User({ name: fbUser.name, 
@@ -43,12 +44,13 @@ const persistenceLayer = (req, res, next) => {
                                   fbAccessToken, 
                                   email, 
                                   avatar: fbUserPicture, 
-                                  fbProfilePicture: fbUserPicture 
+                                  fbProfilePicture: fbUserPicture
                                  });
           user.save((err) => { if (err) return sendUserError(res, err) });
         }
         if (refererID) { addReference(user._id, refererID); }
         const returnUser = formatUser(user);
+        returnUser.referedUsers = user.referedUsers.map(referenceUser => formatUser(referenceUser));
         req.session.user = returnUser;
         req.session.user.authenticated = true;
         next();
