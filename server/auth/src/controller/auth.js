@@ -26,10 +26,8 @@ const addReference = (newUser, refererID) => {
   });
 }
 
-const formatUser = user => {
- console.log('HERE COMES THE USERRRRRRRRRR :HELLO MOTO USER TROLL ', user);
- return Object.assign({}, { name: user.name }, { avatar: user.avatar }, { refered: user.referedUsers });
-}
+const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar }, { refered: user.referedUsers });
+
 
 const restrictedRoutes = (req,res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
@@ -69,7 +67,7 @@ const restrictedRoutes = (req,res, next) => {
       })
     });
   } else {
-    sendUserError(res, 'You need to Authenticate in order to access the API, please make a POST request to /auth/session with a valid username and password.');
+    sendUserError(res, 'You need to Authenticate in order to access the API.');
     return;
   }
 };
