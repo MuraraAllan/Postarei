@@ -31,6 +31,7 @@ const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user
 const persistenceLayer = (req, res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
   const refererID = req.session.refererID;
+  let user;
   if (fbAccessToken) {
     fbUtils.getCurrentUser(fbAccessToken).then(fbUser => {
       const email = fbUser.id.concat('@facebook.com');
@@ -39,7 +40,7 @@ const persistenceLayer = (req, res, next) => {
         exec((err,user) => {
         if (!user) {
           const fbUserPicture = fbUser.picture.data.url;
-          const user = new User({ name: fbUser.name, 
+          user = new User({ name: fbUser.name, 
                                   fbID: fbUser.id, 
                                   fbAccessToken, 
                                   email, 
