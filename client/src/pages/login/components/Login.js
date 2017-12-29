@@ -1,7 +1,10 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Link } from 'react-router-dom'
-const handleClick = () => {
+
+const handleClick = (e) => {
+    e.preventDefault();
+    console.log('UPDATE')
     window.location = 'http://localhost:8000/oauth/facebook';
 }
 

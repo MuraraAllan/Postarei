@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import Login from './pages/login/';
 import Post from './pages/post/';
-import { Switch, Route } from 'react-router';
+import { Switch, Route } from 'react-router-dom';
 import './App.css';
+import { connect } from 'react-redux';
+import { getUser } from './redux/actions/';
+
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.props.getUser();
+  }
   render() {
     return (
       <div className="App">
-        <Switch>
-          <Route path='/posting' component={Post} />
-          <Route component={Login}/>
-        </Switch>
+        <Route path='/' component={Login}/>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+}
+
+export default connect(mapStateToProps, { getUser })(App);
