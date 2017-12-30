@@ -1,7 +1,7 @@
 import React,  { Component } from 'react';
 import UsersAvailable from './components/UsersAvailable';
 import { connect } from 'react-redux';
-import { getUser } from '../../redux/actions/';
+import { getUser, setPostUser, setPostBody } from '../../redux/actions/';
 
 
 class PostContainer extends Component {
@@ -9,7 +9,7 @@ class PostContainer extends Component {
     const UsersAvailableWrapped = UsersAvailable;
     return (
       <div className='PostContainer'>
-        <UsersAvailableWrapped user={this.props.user}/>
+        <UsersAvailableWrapped post={this.props.post} dispatchUserCheckedAction={this.props.setPostUser} dispatchBodyAction={this.props.setPostBody} user={this.props.user}/>
       </div>
     )
   }
@@ -18,7 +18,8 @@ class PostContainer extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    post: state.post,
   }
 }
 
-export default connect(mapStateToProps, { getUser })(PostContainer);
+export default connect(mapStateToProps, { getUser, setPostBody, setPostUser })(PostContainer);

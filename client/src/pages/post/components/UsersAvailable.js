@@ -4,7 +4,7 @@ import NewPost from './NewPost'
 
 const UserWrapper = styled.div`
   display: flex;
-  flex-flow: row wrap;
+  rgmaflex-flow: row wrap;
   flex: 2 0 auto;
 `;
 
@@ -26,13 +26,26 @@ const Image = styled.img`
 `
 
 const UsersAvailable = (props) => {
+  function dispatch (e) {
+    e.preventDefault();
+    props.dispatchUserCheckedAction(this.user);
+  }
   return (
       <EmptyWrapper >
         <UserWrapper className='UsersAvailableComponent'>
-          {props.user.referedUsers.map((item, index) => <Image style={{margin: '5px'}} key={index} src={item.avatar} />)}
+          {props.user.referedUsers.map((item, index) => {
+            return (<div key={index}
+                         style={{ border: '4px solid',
+                                  borderColor: props.post.usersMustPost.findIndex(mustpost =>
+                                  mustpost === item) > -1 ? 'green' : 'red'}}>
+                      <Image onClick={ dispatch.bind({user: item}) }
+                               style={{margin: '5px'}}
+                               src={item.avatar} />
+            </div>)
+          })}
         </UserWrapper>
         <PostWrapper>
-          <NewPost />
+          <NewPost post={props.post} dispatchBodyAction={props.dispatchBodyAction}/>
         </PostWrapper>
       </EmptyWrapper>
   )
