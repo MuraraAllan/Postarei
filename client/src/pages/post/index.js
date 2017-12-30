@@ -5,15 +5,11 @@ import { getUser } from '../../redux/actions/';
 
 
 class PostContainer extends Component {
-  componentWillMount() {
-    this.props.getUser();
-  }
   render() {
-    console.log('hello motoooo', this.props.user)
     const UsersAvailableWrapped = UsersAvailable;
     return (
       <div className='PostContainer'>
-        <UsersAvailableWrapped  users={this.props.user}/>
+        <UsersAvailableWrapped user={this.props.user}/>
       </div>
     )
   }

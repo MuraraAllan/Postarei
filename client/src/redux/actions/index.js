@@ -20,7 +20,10 @@ export const getUser = () => {
         });
       })
       .catch((err) => {
-        dispatch(logOutUser(err.response.data));
+        dispatch({
+          type: 'GET_USER',
+          payload: { name: 'dummy', authenticated: false }
+        });
       });
   };
 };

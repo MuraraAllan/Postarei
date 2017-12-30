@@ -21,7 +21,7 @@ const UsersAvailable = (props) => {
   return (
       <EmptyWrapper >
         <UserWrapper className='UsersAvailableComponent'>
-          <h1> hello moto </h1>
+          <h1> hello moto {props.user.name} </h1>
         </UserWrapper>
       </EmptyWrapper>
   )

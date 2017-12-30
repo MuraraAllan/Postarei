@@ -68,6 +68,8 @@ const currentUser = (req, res, next) => {
     sendStatusOk(res, req.session.user);
     return;
   }
+  sendUserError(res, 'not logged in');
+  return;
   next();
 }
 
