@@ -28,6 +28,19 @@ export const getUser = () => {
   };
 };
 
+export const setPostBody = (payload) => {
+  return {
+    type: 'POST_BODY',
+    payload
+  }
+}
+
+export const setPostUser = (payload) => {
+  return {
+    type: 'POST_USER',
+    payload
+  }
+}
 
 export const logOutUser = (err) => {
   return {
