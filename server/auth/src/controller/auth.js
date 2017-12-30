@@ -1,7 +1,5 @@
 const User = require('../model/mongoose/user');
 const { sendUserError, sendStatusOk, checkUserData } = require('./routeUtils');
-const FB = require('fb');
-FB.options({version: 'v2.11'});
 const fbOauthUtils = require('./oauthUtils').facebook;
 const fbUtils = require('../utils/facebookUtils');
 const signOut = (req,res) => {
@@ -26,12 +24,11 @@ const addReference = (newUser, refererID) => {
   });
 }
 
-const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar });
+const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar }, { fbID: user.fbID });
 
 const persistenceLayer = (req, res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;
   const refererID = req.session.refererID;
-  let user;
   if (fbAccessToken) {
     fbUtils.getCurrentUser(fbAccessToken).then(fbUser => {
       const email = fbUser.id.concat('@facebook.com');
