@@ -1,0 +1,16 @@
+.PostContainer {
+  display: flex;
+  flex-flow: column nowrap;
+}
+.users-flex-container {
+  display:flex;
+  flex-flow: row nowrap;
+}
+.body-flex-container {
+  display: flex;
+  margin-top: 100px;
+}
+.button-flex-container {
+  display: flex;
+  margin-top: 100px;
+}
