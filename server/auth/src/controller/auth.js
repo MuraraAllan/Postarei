@@ -2,6 +2,7 @@ const User = require('../model/mongoose/user');
 const { sendUserError, sendStatusOk, checkUserData } = require('./routeUtils');
 const fbOauthUtils = require('./oauthUtils').facebook;
 const fbUtils = require('../utils/facebookUtils');
+const FB = require('fb');
 const signOut = (req,res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -31,7 +32,7 @@ const persistenceLayer = (req, res, next) => {
   const refererID = req.session.refererID;
   if (fbAccessToken) {
     fbUtils.getCurrentUser(fbAccessToken).then(fbUser => {
-      const email = fbUser.id.concat('@facebook.com');
+      const email = fbUser.email ? fbUser.email : fbUser.id.concat('@facebook.com');
       User.findOne({ email })
        .populate('referedUsers').
         exec((err,user) => {
@@ -47,27 +48,23 @@ const persistenceLayer = (req, res, next) => {
           user.save((err) => { if (err) return sendUserError(res, err) });
         }
         if (refererID) { addReference(user._id, refererID); }
-        const returnUser = formatUser(user);
-        returnUser.referedUsers = user.referedUsers.map(referenceUser => formatUser(referenceUser));
-        req.session.user = returnUser;
-        req.session.user.authenticated = true;
+        req.session.user = user;
         next();
       })
     }).catch(err => next());
   } else {
-    next();
+    return fbOauthUtils.redirectToFacebookOauth(req, res, next);
   }
 };
 
 
 const currentUser = (req, res, next) => {
-  if (req.session.user) {
-    sendStatusOk(res, req.session.user);
-    return;
-  }
-  sendUserError(res, 'not logged in');
+  const user = req.session.user;
+  const returnUser = formatUser(user);
+  returnUser.referedUsers = user.referedUsers.map(referenceUser => formatUser(referenceUser));
+  returnUser.authenticated = true;
+  sendStatusOk(res, returnUser);
   return;
-  next();
 }
 
 
@@ -82,12 +79,35 @@ const recruitNewUser = (req, res, next) => {
     sendUserError(res, 'Invalid reference user');
     return;
   });
-} 
+}
+
+const postRoute = (req, res, next) => {
+  const user = req.session.user;
+  const usersMustPost = req.body.usersMustPost;
+  const postUsers = req.session.user.referedUsers.filter(referedUser => usersMustPost.indexOf(referedUser.fbID) > -1 ? usersMustPost : '');
+  console.log('BODY', req.body);
+  console.log('MUST POST', postUsers);
+  return postUsers.forEach((postUser, done) => {
+  var body = 'My first post using facebook-node-sdk';
+  FB.api(`${postUser.fbID}/feed`,'post', { access_token: postUser.fbAccessToken, message: req.body.body, privacy: {value: 'SELF'} }, function (res) {
+  if(!res || res.error) {
+    console.log(!res ? 'error occurred' : res.error);
+    return;
+  }
+  console.log('Post Id: ' + res.id);
+});
+
+
+  });
+//  req.body.usersMostPost.map
+}
 
 module.exports = (server) => {
   server.get('/join/:recruiterID', recruitNewUser);
+  server.get('/oauth/facebook', fbOauthUtils.redirectToFacebookOauth);
   server.get('/oauth/facebook/callback', fbOauthUtils.facebookOAuthCallback);
   server.use(persistenceLayer);
   server.get('/user', currentUser);
+  server.post('/post', postRoute);
   server.use(fbOauthUtils.redirectToFacebookOauth);
 };
