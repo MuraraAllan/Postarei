@@ -1,8 +1,11 @@
 import React,{ Component } from 'react';
-import UsersAvailable from './components/UsersAvailable';
 import { connect } from 'react-redux';
 import { getUser, setPostUser, setPostBody, submitPost } from '../../redux/actions/';
 import { Button } from 'reactstrap';
+import NewPost from './components/NewPost'
+import AccountsAvailable from './components/AccountsAvailable';
+
+import './Post.css';
 
 class PostContainer extends Component {
   clickButton (e) {
@@ -13,11 +16,22 @@ class PostContainer extends Component {
   render() {
     return (
       <div className='PostContainer'>
-        <UsersAvailable post={this.props.post}
-          dispatchUserCheckedAction={this.props.setPostUser}
-          dispatchBodyAction={this.props.setPostBody}
-          user={this.props.user} />
-          <Button style={{marginLeft: '-90%'}} color="primary" onClick={this.clickButton.bind(this)} > Postar  </Button>
+        <div className='users-flex-container'>
+          <AccountsAvailable
+            dispatchUserCheckedAction={this.props.setPostUser}
+            post={this.props.post}
+            user={this.props.user}/>
+        </div>
+        <div className='body-flex-container'>
+          <NewPost post={this.props.post}
+            dispatchBodyAction={this.props.setPostBody}/>
+        </div>
+        <div className='button-flex-container'>
+          <Button color="primary"
+            onClick={this.clickButton.bind(this)} >
+            Postar
+          </Button>
+        </div>
       </div>
     );
   }
