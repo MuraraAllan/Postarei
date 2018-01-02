@@ -5,16 +5,14 @@ const server = express();
 const session = require('express-session');
 const PORT = 8000; 
 const mongoose = require('mongoose');
+const { appSecret , mongoUrl } = require('./secret.js');
 const cors = require('cors');
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/DemoApp_Test';
-
-mongoose.connect(MONGO_URL);
+mongoose.connect(mongoUrl);
 mongoose.Promise = global.Promise;
 const corsOptions = {
  origin: 'http://localhost:3000',
  credentials: true
 };
-const { appSecret } = require('./secret.js');
 const sessionOptions = {
   secret: appSecret,
   resave: false,
