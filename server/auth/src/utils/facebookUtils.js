@@ -3,7 +3,7 @@ FB.options({version: 'v2.11'});
 
 const getCurrentUser = (fbAccessToken) => {
   return new Promise((resolve, reject) => {   
-   FB.api('me', { fields: 'id, name, email, picture',
+   FB.api('me', { fields: 'id, name, email, picture, feed',
                    scope: 'email', 
                    access_token: fbAccessToken }
     ).then(res => resolve(res))

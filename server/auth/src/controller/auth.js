@@ -36,20 +36,31 @@ const persistenceLayer = (req, res, next) => {
       User.findOne({ email })
        .populate('referedUsers').
         exec((err,user) => {
-        if (!user) {
           const fbUserPicture = fbUser.picture.data.url;
-          user = new User({ name: fbUser.name, 
-                                  fbID: fbUser.id, 
-                                  fbAccessToken, 
-                                  email, 
-                                  avatar: fbUserPicture, 
-                                  fbProfilePicture: fbUserPicture
-                                 });
-          user.save((err) => { if (err) return sendUserError(res, err) });
-        }
-        if (refererID) { addReference(user._id, refererID); }
-        req.session.user = user;
-        next();
+          if (!user) {
+            user = new User({ 
+              name: fbUser.name, 
+              fbID: fbUser.id, 
+              fbAccessToken, 
+              email, 
+              avatar: fbUserPicture, 
+              fbProfilePicture: fbUserPicture
+            });
+          } else {
+            user = Object.assign(user, {  name: fbUser.name, 
+              fbID: fbUser.id, 
+              fbAccessToken, 
+              email, 
+              avatar: fbUserPicture, 
+              fbProfilePicture: fbUserPicture });
+         }
+          
+         return  user.save((err) => {
+            if (err) return sendUserError(res, err);
+            if (refererID) { addReference(user._id, refererID); }
+            req.session.user = user;
+            return next();
+          });
       })
     }).catch(err => next());
   } else {
@@ -89,7 +100,7 @@ const postRoute = (req, res, next) => {
   console.log('MUST POST', postUsers);
   return postUsers.forEach((postUser, done) => {
   var body = 'My first post using facebook-node-sdk';
-  FB.api(`${postUser.fbID}/feed`,'post', { access_token: postUser.fbAccessToken, message: req.body.body, privacy: {value: 'SELF'} }, function (res) {
+  FB.api('/me/feed','post', { access_token: postUser.fbAccessToken, message: req.body.body }, function (res) {
   if(!res || res.error) {
     console.log(!res ? 'error occurred' : res.error);
     return;
