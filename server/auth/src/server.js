@@ -6,7 +6,7 @@ const session = require('express-session');
 const PORT = 8000; 
 const mongoose = require('mongoose');
 const cors = require('cors');
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/DemoApp_Test';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://muraraallan:kdnekbk12@ds237967.mlab.com:37967/postarei;
 
 mongoose.connect(MONGO_URL);
 mongoose.Promise = global.Promise;
