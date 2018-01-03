@@ -1,13 +1,13 @@
 const FB = require('fb');
 const { sendUserError, sendStatusOk, checkUserData } = require('./routeUtils');
-const { facebookID, facebookRedirectUri, facebookSecret } = require('../secret.js');
+const { facebookID, frontUrl, facebookRedirectUri, facebookSecret } = require('../secret.js');
 FB.options({version: 'v2.11'});
 
 const redirectToFacebookOauth = (req, res, next) => {
   if (req.session.redirect) {
     res.status(200);
     delete req.session.redirect;
-    res.redirect('http://localhost:3000/posting');
+    res.redirect(frontUrl);
     return;
   }
   const authUrl = FB.getLoginUrl({
