@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./controller/auth');
 const server = express();
-const { appSecret, mongoUrl } = require('./secret.js');
 const session = require('express-session');
 const PORT = 8000; 
 const mongoose = require('mongoose');
