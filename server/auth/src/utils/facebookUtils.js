@@ -7,7 +7,7 @@ const getCurrentUser = (fbAccessToken) => {
      fields: 'id, name, email, picture, feed',
      scope: 'email', 
      access_token: fbAccessToken }
-   ).then(res => resolve(res));
+   ).then(res => resolve(res))
    .catch(err => reject(err));
   });
 };
