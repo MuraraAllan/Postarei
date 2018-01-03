@@ -11,7 +11,7 @@ console.log(mongoUrl);
 mongoose.connect(mongoUrl);
 mongoose.Promise = global.Promise;
 const corsOptions = {
- origin: 'http://localhost:3000',
+ origin: 'https://postarei.sloppy.zone',
  credentials: true
 };
 const sessionOptions = {
