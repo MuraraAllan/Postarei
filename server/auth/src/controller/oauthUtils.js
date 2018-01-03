@@ -11,7 +11,7 @@ const redirectToFacebookOauth = (req, res, next) => {
     return;
   }
   const authUrl = FB.getLoginUrl({
-    scope: 'email, user_likes, user_photos, publish_actions, user_videos, public_profile, user_friends',
+    scope: 'user_events, user_friends, user_about_me, email, user_status, user_posts, rsvp_event, publish_actions, user_managed_groups, manage_pages, publish_pages, pages_messaging, public_profile, basic_info',
     redirect_uri: facebookRedirectUri,
     appId: facebookID
   });
@@ -22,7 +22,7 @@ const redirectToFacebookOauth = (req, res, next) => {
 const facebookOAuthCallback = (req, res, next) => {
   FB.api('oauth/access_token', {
       client_id: facebookID,
-      scope: 'email, user_likes, publish_actions, user_photos, user_videos, public_profile, user_friends',
+      scope: 'user_events, user_friends, user_about_me, email, user_status, user_posts, rsvp_event, publish_actions, user_managed_groups, manage_pages, publish_pages, pages_messaging, public_profile, basic_info',
       client_secret: facebookSecret, 
       redirect_uri: facebookRedirectUri,
       code: req.query.code

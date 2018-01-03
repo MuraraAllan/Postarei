@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./controller/auth');
 const server = express();
+const { appSecret, mongoUrl } = require('./secret.js');
 const session = require('express-session');
 const PORT = 8000; 
 const mongoose = require('mongoose');
@@ -10,7 +11,7 @@ const cors = require('cors');
 mongoose.connect(mongoUrl);
 mongoose.Promise = global.Promise;
 const corsOptions = {
- origin: 'http://localhost:3000',
+ origin: 'https://postarei.sloppy.zone',
  credentials: true
 };
 const sessionOptions = {
