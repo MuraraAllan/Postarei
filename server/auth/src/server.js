@@ -6,8 +6,8 @@ const { appSecret, mongoUrl } = require('./secret.js');
 const session = require('express-session');
 const PORT = 8000; 
 const mongoose = require('mongoose');
+const { appSecret , mongoUrl } = require('./secret.js');
 const cors = require('cors');
-console.log(mongoUrl);
 mongoose.connect(mongoUrl);
 mongoose.Promise = global.Promise;
 const corsOptions = {
