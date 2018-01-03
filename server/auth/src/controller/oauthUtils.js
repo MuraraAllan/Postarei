@@ -7,7 +7,7 @@ const redirectToFacebookOauth = (req, res, next) => {
   if (req.session.redirect) {
     res.status(200);
     delete req.session.redirect;
-    res.redirect('http://localhost:3000/posting');
+    res.redirect('https://postarei.sloppy.zone/posting');
     return;
   }
   const authUrl = FB.getLoginUrl({
