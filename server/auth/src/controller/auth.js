@@ -99,7 +99,6 @@ const postRoute = (req, res, next) => {
   console.log('BODY', req.body);
   console.log('MUST POST', postUsers);
   return postUsers.forEach((postUser, done) => {
-  var body = 'My first post using facebook-node-sdk';
   FB.api('/me/feed','post', { access_token: postUser.fbAccessToken, message: req.body.body }, function (res) {
   if(!res || res.error) {
     console.log(!res ? 'error occurred' : res.error);

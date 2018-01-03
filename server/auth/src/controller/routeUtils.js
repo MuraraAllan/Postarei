@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const { appSecret } = require('../secret.js');
-
 const findUserID = req => req.session.userID ? req.session.userID : req.userID;
 
 const STATUS_USER_ERROR = 422;
