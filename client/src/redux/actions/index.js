@@ -9,23 +9,24 @@ const ROOT_URL = 'http://localhost:8000';
 //   { uuid: 'abc218', name: 'Allan Murara', avatar_url: 'https://avatars2.githubusercontent.com/u/8569238?s=400&u=3cb618386ff047e98a56751add49d3391a891a55&v=4' },
 //   { uuid: 'def359', name: 'Dummy Data', avatar_url: 'https://i.pinimg.com/736x/2e/fe/bd/2efebd60f3da34423e8ad8a92af16c2d--bob-sponge-spongebob-squarepants.jpg' }
 // ];
+
 export const submitPost = (post) => {
   return (dispatch) => {
     axios(`${ROOT_URL}/post`, { method: 'post', data: post,  withCredentials: true })
       .then((response) => {
         console.log(response);
-        // dispatch({
-        //   type: 'GET_USER',
-        //   payload: response.data
-        // });
-      })
-      .catch(() => {
         dispatch({
-          type: 'GET_USER',
-          payload: { name: 'dummy', authenticated: false }
-        });
-      });
+          type: 'POST_RESULT',
+          payload: response.data
+        })
+      })
   };
+};
+
+export const newPost = () => {
+  return {
+    type: 'POST_RESET',
+  }
 };
 
 export const getUser = () => {
@@ -51,6 +52,21 @@ export const setPostBody = (payload) => {
     type: 'POST_BODY',
     payload
   };
+};
+
+// export const postOff = () => {
+//   return {
+//     type: 'POST_OFF'
+//   }
+// }
+export const postOff = () => { return { type: 'POST_OFF'} };
+export const postOn = () => { return { type: 'POST_ON'} };
+
+export const setImage = (payload) => {
+  return {
+    type: 'SET_IMAGE',
+    payload
+  }
 };
 
 export const setPostUser = (payload) => {
