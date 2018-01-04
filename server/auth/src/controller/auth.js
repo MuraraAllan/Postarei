@@ -96,20 +96,44 @@ const postRoute = (req, res, next) => {
   const user = req.session.user;
   const usersMustPost = req.body.usersMustPost;
   const postUsers = req.session.user.referedUsers.filter(referedUser => usersMustPost.indexOf(referedUser.fbID) > -1 ? usersMustPost : '');
-  console.log('BODY', req.body);
-  console.log('MUST POST', postUsers);
-  return postUsers.forEach((postUser, done) => {
-  FB.api('/me/feed','post', { access_token: postUser.fbAccessToken, message: req.body.body }, function (res) {
-  if(!res || res.error) {
-    console.log(!res ? 'error occurred' : res.error);
-    return;
-  }
-  console.log('Post Id: ' + res.id);
-});
+  const promises = [];
+  console.log(req.body)
+  const images = req.body.images ? req.body.images : null;
 
-
+  postUsers.forEach(postUser => {
+    const post = {
+      access_token: postUser.fbAccessToken,
+      message: req.body.body 
+    };
+    if (req.body.images) post.images = req.body.images;
+    promises.push(fbUtils.postFeed(post, postUser.name));
   });
-//  req.body.usersMostPost.map
+  Promise.all(promises).then(promiseRes => {
+    const result = {
+      errors: [],
+      success: [],
+    };
+    promiseRes.forEach(process => {
+      const message = process.message ? JSON.parse(process.message) : {}; 
+      if ( message.error ) { 
+        const error = {
+          user: process.user,
+          message: message.error.error_user_msg
+        };
+        result.errors = [
+           ...result.errors,  
+          error 
+        ];
+      } else {
+        result.success = [
+          ...result.success, 
+          process.user 
+        ];
+      }
+    })
+    sendStatusOk(res, result);
+    return;
+  }).catch(err=> console.log('errrrr', err));
 }
 
 module.exports = (server) => {

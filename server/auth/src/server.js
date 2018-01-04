@@ -10,7 +10,7 @@ const cors = require('cors');
 mongoose.connect(mongoUrl);
 mongoose.Promise = global.Promise;
 const corsOptions = {
- origin: 'https://postarei.sloppy.zone',
+ origin: ['https://postarei.sloppy.zone', 'http://localhost:3000'],
  credentials: true
 };
 const sessionOptions = {
