@@ -10,14 +10,14 @@ class LoginContainer extends Component {
       <div className='LoginContainer'>
         {this.props.user.authenticated ? <Post/> : <LoginComponent /> }
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, { getUser })(LoginContainer);
