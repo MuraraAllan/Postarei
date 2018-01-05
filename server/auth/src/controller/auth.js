@@ -25,7 +25,7 @@ const addReference = (newUser, refererID) => {
   });
 }
 
-const formatUser = user => Object.assign({}, { name: user.name }, { avatar: user.avatar }, { fbID: user.fbID });
+const formatUser = user => Object.assign({}, { id: user.id }, { name: user.name }, { avatar: user.avatar }, { fbID: user.fbID });
 
 const persistenceLayer = (req, res, next) => {
   const fbAccessToken = req.session.facebookAccessToken;

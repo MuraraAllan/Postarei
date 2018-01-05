@@ -2,7 +2,7 @@ FROM  node:8.6
 # Copy contents into the gateway container 
 ADD ./ /
 # Set the working directory to   containerr 
-WORKDIR /frontend
+WORKDIR /
 # Added node_modules to .dockerignore (size) 
 RUN npm install 
 # Define environment variable 

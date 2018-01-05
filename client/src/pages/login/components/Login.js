@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const handleClick = (e) => {
   e.preventDefault();
   console.log('UPDATE');
-  window.location = 'http://localhost:8000/oauth/facebook';
+  window.location = 'http://postareioauth.sloppy.zone/oauth/facebook';
 };
 
 const LoginComponent = () => {
