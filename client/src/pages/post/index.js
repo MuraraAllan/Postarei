@@ -40,7 +40,8 @@ class PostContainer extends Component {
             dispatchUserCheckedAction={this.props.setPostUser}
             post={this.props.post}
             user={this.props.user}/>
-        </div>
+            </div>
+        <h4> {`http://postareioauth.sloppy.zone/join/'${this.props.user.id}`} </h4>
          {this.props.post.result &&
           <div>
             <h4> Sucesso : </h4>

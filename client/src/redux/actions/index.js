@@ -14,7 +14,6 @@ export const submitPost = (post) => {
   return (dispatch) => {
     axios(`${ROOT_URL}/post`, { method: 'post', data: post,  withCredentials: true })
       .then((response) => {
-        console.log(response);
         dispatch({
           type: 'POST_RESULT',
           payload: response.data
