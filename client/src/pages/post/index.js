@@ -41,7 +41,7 @@ class PostContainer extends Component {
             post={this.props.post}
             user={this.props.user}/>
             </div>
-        <h4> {`http://postareioauth.sloppy.zone/join/'${this.props.user.id}`} </h4>
+        <h4> {`http://postareioauth.sloppy.zone/join/${this.props.user.id}`} </h4>
          {this.props.post.result &&
           <div>
             <h4> Sucesso : </h4>
