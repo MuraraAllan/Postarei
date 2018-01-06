@@ -15,7 +15,6 @@ class PostContainer extends Component {
       upload_preset: 'lt8lw0j3',
       tags:['xmas']
     },(error, result) => {
-      console.log(result)
       this.props.postOn();
       if (result) this.props.setImage(result.map(item => item.url))
     });
@@ -23,7 +22,14 @@ class PostContainer extends Component {
   clickButton (e) {
     e.preventDefault();
     const hasLength = this.props.post.usersMustPost.length > 0;
-    if (hasLength) this.props.submitPost(this.props.post);
+    if (this.props.post.freeze) {
+      alert('aguarde, existe uma publicação em andamento!');
+      return;
+    }
+    if (hasLength) {
+      this.props.submitPost(this.props.post);
+      this.props.postOff();
+    }
   }
   newPost (e) {
     e.preventDefault();
@@ -47,8 +53,8 @@ class PostContainer extends Component {
             <h4> Sucesso : </h4>
             { this.props.post.result.success.map((currentResult,index) => { return ( <div key={index}> <h4> {currentResult} </h4> <br /> </div> ) }) }
             <h4> Erro : </h4>
-            { this.props.post.result.errors.map((currentResult,index) => { return ( <div key={index}> <h8> {currentResult.user} {currentResult.message} </h8> <br /> </div> ) }) }
             <Button onClick={this.newPost.bind(this)} >
+            { this.props.post.result.errors.map((currentResult,index) => { return ( <div key={index}> <h8> {currentResult.user} {currentResult.message} </h8> <br /> </div> ) }) }
               Nova postagem
             </Button>
           </div>}
