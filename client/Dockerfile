@@ -4,7 +4,8 @@ ADD ./ /
 # Set the working directory to   containerr 
 WORKDIR /
 # Added node_modules to .dockerignore (size) 
-RUN npm install 
+RUN npm install
+RUN npm run build
 # Define environment variable 
 EXPOSE 8000 
 ENV Name frontend
