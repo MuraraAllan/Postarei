@@ -1,10 +1,9 @@
 import React,{ Component } from 'react';
 import { connect } from 'react-redux';
-import { getUser, setPostUser, setPostBody, submitPost, postOff, postOn, setImage, newPost } from '../../redux/actions/';
+import { getUser, setPostUser, setPostBody, submitPost, postOff, postOn, setImage, newPost, selectAllUsersToPost } from '../../redux/actions/';
 import { Button } from 'reactstrap';
 import NewPost from './components/NewPost';
 import AccountsAvailable from './components/AccountsAvailable';
-
 import './Post.css';
 
 class PostContainer extends Component {
@@ -19,6 +18,12 @@ class PostContainer extends Component {
       this.props.postOn();
       if (result) this.props.setImage(result.map(item => item.url))
     });
+  }
+  selectAllUsers(e) {
+    e.preventDefault();
+    const users = this.props.user.referedUsers.map(user => user.fbID);
+    console.log(users);
+    this.props.selectAllUsersToPost(users); 
   }
   clickButton (e) {
     e.preventDefault();
@@ -41,7 +46,7 @@ class PostContainer extends Component {
             post={this.props.post}
             user={this.props.user}/>
             </div>
-        <h4> {`http://postareioauth.sloppy.zone/join/${this.props.user.id}`} </h4>
+        <h4> {`http://postareioauth.herokuapp.com/join/${this.props.user.id}`} </h4>
          {this.props.post.result &&
           <div>
             <h4> Sucesso : </h4>
@@ -62,6 +67,7 @@ class PostContainer extends Component {
             onClick={this.clickButton.bind(this)} >
             Postar
           </Button>
+          <Button onClick={this.selectAllUsers.bind(this)} className="allusers-button"> Selecionar todos usuários </Button>
           <Button onClick={this.uploadWidget.bind(this)} className="upload-button">
               Adicionar Imagem a postagem
           </Button>
@@ -78,4 +84,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getUser, setPostBody, setPostUser, submitPost, postOff, postOn, setImage, newPost })(PostContainer);
+export default connect(mapStateToProps, { getUser, setPostBody, setPostUser, submitPost, postOff, postOn, setImage, newPost, selectAllUsersToPost })(PostContainer);

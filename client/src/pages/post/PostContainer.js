@@ -2,7 +2,7 @@ import React from 'react';
 import NewPost from './NewPost'
 import AccountsAvailable from './AccountsAvailable';
 import styled from 'styled-components';
-
+impot { Button '
 const UsersWrapper = styled.div`
   display: flex;
   rgmaflex-flow: row wrap;
@@ -30,6 +30,7 @@ const PostContainer = (props) => {
           user={props.user}/>
       </UsersWrapper>
       <NewPostWrapper>
+        <Button 
         <NewPost post={props.post} dispatchBodyAction={props.dispatchBodyAction}/>
       </NewPostWrapper>
     </EmptyWrapper>

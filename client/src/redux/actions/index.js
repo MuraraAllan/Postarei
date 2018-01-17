@@ -1,5 +1,5 @@
 const axios = require('axios');
-const ROOT_URL = 'https://postareioauth.sloppy.zone';
+const ROOT_URL = 'https://postareioauth.herokuapp.com';
 
 // const mockUsers = [
 //   { uuid: 'abc214', name: 'Allan Murara', avatar_url: 'https://avatars2.githubusercontent.com/u/8569238?s=400&u=3cb618386ff047e98a56751add49d3391a891a55&v=4' },
@@ -74,7 +74,12 @@ export const setPostUser = (payload) => {
     payload
   };
 };
-
+export const selectAllUsersToPost = (payload) => {
+  return {
+    type: 'ALL_USERS_POST',
+    payload
+  }
+};
 export const logOutUser = (err) => {
   return {
     type: 'LOGOUT',

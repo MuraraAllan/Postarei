@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const handleClick = (e) => {
   e.preventDefault();
   console.log('UPDATE');
-  window.location = 'http://postareioauth.sloppy.zone/oauth/facebook';
+  window.location = 'http://postareioauth.herokuapp.com/oauth/facebook';
 };
 
 const LoginComponent = () => {

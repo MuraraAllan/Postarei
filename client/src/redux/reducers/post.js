@@ -2,6 +2,8 @@ export default (post = { body: '', usersMustPost: [] }, action) => {
   switch (action.type) {
     case 'POST_BODY':
       return {...post, body: action.payload}
+    case 'ALL_USERS_POST': 
+      return { ...post, usersMustPost: action.payload };
     case 'POST_USER':
       const index = post.usersMustPost.findIndex(item => item === action.payload);
       if (index > -1) {
